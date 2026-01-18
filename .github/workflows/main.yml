@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME: your-app-service-name   # 👈 Change this
+  AZURE_WEBAPP_NAME: acciovac-prod-api
   DOTNET_VERSION: '10.0.x'
 
 jobs:
@@ -31,9 +31,9 @@ jobs:
       - name: Publish
         run: dotnet publish src/acciovac.API/acciovac.API.csproj -c Release -o ./publish
 
-      # - name: Deploy to Azure Web App
-      #   uses: azure/webapps-deploy@v3
-      #   with:
-      #     app-name: ${{ env.AZURE_WEBAPP_NAME }}
-      #     publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-      #     package: ./publish
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
