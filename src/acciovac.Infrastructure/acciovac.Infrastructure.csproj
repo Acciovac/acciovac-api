@@ -5,6 +5,10 @@
     <ProjectReference Include="..\acciovac.Domain\acciovac.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Google.GenAI" Version="0.13.1" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
