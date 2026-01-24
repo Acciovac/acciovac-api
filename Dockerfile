@@ -12,8 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/acciovac.API/acciovac.API.csproj", "./"]
-RUN dotnet restore "./acciovac.API.csproj"
+COPY ["src/acciovac.API/acciovac.API.csproj", "src/acciovac.API/"]
+COPY ["src/acciovac.Application/acciovac.Application.csproj", "src/acciovac.Application/"]
+COPY ["src/acciovac.Infrastructure/acciovac.Infrastructure.csproj", "src/acciovac.Infrastructure/"]
+RUN dotnet restore "src/acciovac.API/acciovac.API.csproj"
 COPY . .
 WORKDIR "/src/acciovac.API"
 RUN dotnet build "./acciovac.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
