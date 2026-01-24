@@ -15,8 +15,9 @@ WORKDIR /src
 COPY ["src/acciovac.API/acciovac.API.csproj", "src/acciovac.API/"]
 COPY ["src/acciovac.Application/acciovac.Application.csproj", "src/acciovac.Application/"]
 COPY ["src/acciovac.Infrastructure/acciovac.Infrastructure.csproj", "src/acciovac.Infrastructure/"]
+COPY ["src/acciovac.Domain/acciovac.Domain.csproj", "src/acciovac.Domain/"]
 RUN dotnet restore "src/acciovac.API/acciovac.API.csproj"
-COPY . .
+COPY src/ src/
 WORKDIR "/src/acciovac.API"
 RUN dotnet build "./acciovac.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
