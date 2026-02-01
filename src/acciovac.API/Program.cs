@@ -1,44 +1,30 @@
+using AccioVac.Infrastructure;
+using AccioVac.Application;
+using AccioVac.Infrastructure.Persistence;
+using MediatR;
+using AccioVac.Application.Trips.Commands;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// 1. Add Layers
+builder.Services.AddApplicationServices(); // Extension method to register MediatR
+builder.Services.AddInfrastructureServices(builder.Configuration); // Registers EF Core
 
 var app = builder.Build();
 
-app.MapGet("/health", () => "AccioVac API is running 🚀");
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// 2. Create Database automatically (Good for Dev)
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated(); // Creates DB and Seeds the Dev User
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
+// 3. API Endpoints
+app.MapPost("/api/trips", async (IMediator mediator, CreateTripCommand command) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var tripId = await mediator.Send(command);
+    return Results.Created($"/api/trips/{tripId}", new { Id = tripId });
+});
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
