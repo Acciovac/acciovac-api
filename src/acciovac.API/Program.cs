@@ -1,3 +1,4 @@
+using acciovac.Application;
 using acciovac.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // OpenAPI (new .NET OpenAPI)
 builder.Services.AddOpenApi();
+
+// Add Controllers
+builder.Services.AddControllers();
+
+// Application (MediatR, FluentValidation)
+builder.Services.AddApplication();
 
 // Infrastructure (EF Core, DbContext)
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -24,6 +31,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 // --------------------
 // Endpoints

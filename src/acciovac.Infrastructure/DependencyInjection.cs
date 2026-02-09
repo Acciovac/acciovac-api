@@ -1,4 +1,6 @@
-﻿using acciovac.Infrastructure.Persistence;
+﻿using acciovac.Application.Abstractions;
+using acciovac.Infrastructure.Persistence;
+using acciovac.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,8 @@ namespace acciovac.Infrastructure
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }
