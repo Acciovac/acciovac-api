@@ -5,7 +5,7 @@ using System.Text;
 
 namespace acciovac.Domain.Entities
 {
-    public class User : Entity<Guid>
+    public class User : AuditableEntity<Guid>
     {
         public string FirebaseUid { get; private set; }
         public string Email { get; private set; }
@@ -14,13 +14,15 @@ namespace acciovac.Domain.Entities
 
         private User() { }
 
-        public User(string firebaseUid, string email)
+        public User(string firebaseUid, string email, string createdBy)
         {
             Id = Guid.NewGuid();
             FirebaseUid = firebaseUid;
             Email = email;
             IsActive = true;
             CreatedAt = DateTime.UtcNow;
+
+            SetCreated(createdBy);
         }
     }
 }
