@@ -11,6 +11,7 @@ namespace acciovac.Application.Behaviors.Users.Commands.CreateUser
         string Email,
         string? DisplayName,
         string? PhotoUrl,
-        string? PhoneNumber
+        string? PhoneNumber,
+        string? CreatedBy
     ) : IRequest<Result<Guid>>;
 }
