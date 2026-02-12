@@ -23,7 +23,7 @@ namespace acciovac.Application.Behaviors.Users.Commands.CreateUser
                 return Result<Guid>.Failure("User with this Firebase UID already exists");
             }
 
-            var user = new User(request.FirebaseUid, request.Email);
+            var user = new User(request.FirebaseUid, request.Email, request.CreatedBy);
             
             await _userRepository.AddAsync(user);
 
