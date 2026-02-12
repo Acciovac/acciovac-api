@@ -5,7 +5,7 @@ using System.Text;
 
 namespace acciovac.Domain.Entities
 {
-    public class AiRule : Entity<Guid>
+    public class AiRule : AuditableEntity<Guid>
     {
         public string Code { get; private set; }
         public string RuleText { get; private set; }
@@ -14,13 +14,23 @@ namespace acciovac.Domain.Entities
 
         private AiRule() { }
 
-        public AiRule(string code, string ruleText, int priority)
+        public AiRule(string code, string ruleText, int priority, string createdBy)
         {
             Id = Guid.NewGuid();
             Code = code;
             RuleText = ruleText;
             Priority = priority;
             IsActive = true;
+
+            SetCreated(createdBy);
+        }
+
+        public void UpdateRule(string ruleText, int priority, string modifiedBy)
+        {
+            RuleText = ruleText;
+            Priority = priority;
+
+            SetModified(modifiedBy);
         }
     }
 }
