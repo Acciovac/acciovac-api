@@ -17,6 +17,8 @@ namespace acciovac.API.Controllers
 
         [HttpPost]
         [Route("create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command)
         {
             var result = await _mediator.Send(command);
@@ -33,9 +35,10 @@ namespace acciovac.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(Guid id)
         {
-            // TODO: Implement GetUser query
             return Ok(new { id, message = "Get user endpoint - to be implemented" });
         }
     }
