@@ -15,13 +15,13 @@ namespace acciovac.Application.Behaviors.Rates.Commands.UpdateRate
             RuleFor(x => x.PerKm)
                 .GreaterThan(0).WithMessage("Per km rate must be greater than 0");
 
-            RuleFor(x => x.NightMultiplier)
-                .GreaterThan(0).WithMessage("Night multiplier must be greater than 0")
-                .When(x => x.NightMultiplier.HasValue);
+            // RuleFor(x => x.NightMultiplier)
+            //     .GreaterThan(0).WithMessage("Night multiplier must be greater than 0")
+            //     .When(x => x.NightMultiplier.HasValue);
 
-            RuleFor(x => x.PeakMultiplier)
-                .GreaterThan(0).WithMessage("Peak multiplier must be greater than 0")
-                .When(x => x.PeakMultiplier.HasValue);
+            // RuleFor(x => x.PeakMultiplier)
+            //     .GreaterThan(0).WithMessage("Peak multiplier must be greater than 0")
+            //     .When(x => x.PeakMultiplier.HasValue);
         }
     }
 }
