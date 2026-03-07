@@ -35,8 +35,8 @@ namespace acciovac.API.Controllers
                 id = rate.Id,
                 baseFare = rate.BaseFare,
                 perKm = rate.PerKm,
-                // nightMultiplier = rate.NightMultiplier,
-                // peakMultiplier = rate.PeakMultiplier,
+                nightMultiplier = rate.NightMultiplier,
+                peakMultiplier = rate.PeakMultiplier,
                 createdAt = rate.CreatedAt
             });
         }
@@ -49,8 +49,8 @@ namespace acciovac.API.Controllers
             var rate = new Rate(
                 request.BaseFare,
                 request.PerKm,
-                // request.NightMultiplier ?? 1.0m,
-                // request.PeakMultiplier ?? 1.0m,
+                request.NightMultiplier ?? 1.0m,
+                request.PeakMultiplier ?? 1.0m,
                 "system"
             );
 
@@ -72,9 +72,9 @@ namespace acciovac.API.Controllers
             var command = new UpdateRateCommand(
                 id,
                 request.BaseFare,
-                request.PerKm
-                // request.NightMultiplier,
-                // request.PeakMultiplier
+                request.PerKm,
+                request.NightMultiplier,
+                request.PeakMultiplier
             );
 
             var result = await _mediator.Send(command);
@@ -91,15 +91,15 @@ namespace acciovac.API.Controllers
 
     public record CreateRateRequest(
         decimal BaseFare,
-        decimal PerKm
-        // decimal? NightMultiplier,
-        // decimal? PeakMultiplier
+        decimal PerKm,
+        decimal? NightMultiplier,
+        decimal? PeakMultiplier
     );
 
     public record UpdateRateRequest(
         decimal BaseFare,
-        decimal PerKm
-        // decimal? NightMultiplier,
-        // decimal? PeakMultiplier
+        decimal PerKm,
+        decimal? NightMultiplier,
+        decimal? PeakMultiplier
     );
 }
