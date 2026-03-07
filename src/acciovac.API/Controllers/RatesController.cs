@@ -41,63 +41,20 @@ namespace acciovac.API.Controllers
             });
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateRate([FromBody] CreateRateRequest request)
-        {
-            var rate = new Rate(
-                request.BaseFare,
-                request.PerKm,
-                // request.NightMultiplier ?? 1.0m,
-                // request.PeakMultiplier ?? 1.0m,
-                "system"
-            );
-
-            await _rateRepository.AddAsync(rate);
-
-            return CreatedAtAction(
-                nameof(GetActiveRate),
-                new { id = rate.Id },
-                new { id = rate.Id, message = "Rate created successfully" });
-        }
-
-        [HttpPut("{id:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateRate(Guid id, [FromBody] UpdateRateRequest request)
-        {
-            var command = new UpdateRateCommand(
-                id,
-                request.BaseFare,
-                request.PerKm,
-                request.NightMultiplier,
-                request.PeakMultiplier
-            );
-
-            var result = await _mediator.Send(command);
-
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { error = result.Error });
-            }
-
-            return Ok(new { id = result.Value, message = "Rate updated successfully" });
-        }
+        
     }
 
     public record CreateRateRequest(
         decimal BaseFare,
-        decimal PerKm,
-        decimal? NightMultiplier,
-        decimal? PeakMultiplier
+        decimal PerKm
+        // decimal? NightMultiplier,
+        // decimal? PeakMultiplier
     );
 
     public record UpdateRateRequest(
         decimal BaseFare,
-        decimal PerKm,
-        decimal? NightMultiplier,
-        decimal? PeakMultiplier
+        decimal PerKm
+        // decimal? NightMultiplier,
+        // decimal? PeakMultiplier
     );
 }
