@@ -9,8 +9,8 @@ namespace acciovac.Application.Behaviors.Rates.Commands.UpdateRate
     public sealed record UpdateRateCommand(
         Guid RateId,
         decimal BaseFare,
-        decimal PerKm
-        // decimal? NightMultiplier,
-        // decimal? PeakMultiplier
+        decimal PerKm,
+        decimal? NightMultiplier,
+        decimal? PeakMultiplier
     ) : IRequest<Result<Guid>>;
 }

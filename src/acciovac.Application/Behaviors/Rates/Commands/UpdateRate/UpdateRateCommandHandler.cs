@@ -25,8 +25,8 @@ namespace acciovac.Application.Behaviors.Rates.Commands.UpdateRate
             rate.UpdateRates(
                 request.BaseFare,
                 request.PerKm,
-                // request.NightMultiplier ?? 1.0m,
-                // request.PeakMultiplier ?? 1.0m,
+                request.NightMultiplier ?? 1.0m,
+                request.PeakMultiplier ?? 1.0m,
                 "system"
             );
 
