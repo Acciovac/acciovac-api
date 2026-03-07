@@ -63,7 +63,29 @@ namespace acciovac.API.Controllers
         }
 
         
+        [HttpPut("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateRate(Guid id, [FromBody] UpdateRateRequest request)
+        {
+            var command = new UpdateRateCommand(
+                id,
+                request.BaseFare,
+                request.PerKm
+                // request.NightMultiplier,
+                // request.PeakMultiplier
+            );
 
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new { error = result.Error });
+            }
+
+            return Ok(new { id = result.Value, message = "Rate updated successfully" });
+        }
         
     }
 
