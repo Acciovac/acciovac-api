@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace acciovac.Application.Behaviors.Reviews.Commands.CreateReview;
 
-public class UpdateReviewCommandValidator : AbstractValidator<CreateReviewCommand>
+public class CreateReviewCommandValidator : AbstractValidator<CreateReviewCommand>
 {
-    public UpdateReviewCommandValidator()
+    public CreateReviewCommandValidator()
     {
         RuleFor(x => x.UserId)
             .NotEmpty().WithMessage("User ID is required");
