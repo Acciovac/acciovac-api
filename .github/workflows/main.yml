@@ -3,7 +3,7 @@ name: Build and Deploy Acciovac to the production
 on:
   push:
     branches:
-      - main
+      - resolve-internal-server-error
 
 env:
   AZURE_WEBAPP_NAME: acciovac-prod-api
