@@ -4,39 +4,29 @@ namespace acciovac.Domain.Entities;
 
 public class LocalExpirences : AuditableEntity<Guid>
     {
-        public decimal BaseFare { get; private set; }
-        public decimal PerKm { get; private set; }
-        public decimal? NightMultiplier { get; private set; }
-        public decimal? PeakMultiplier { get; private set; }
+        public string LocationName { get; private set; }
+        public string Description { get; private set; }
 
-        private Rate() { }
+        private LocalExpirences() { }
 
-        public Rate(
-            decimal baseFare,
-            decimal perKm,
-            decimal nightMultiplier,
-            decimal peakMultiplier,
+        public LocalExpirences(
+            string locationName,
+            string description,
             string createdBy = "system")
         {
             Id = Guid.NewGuid();
-            BaseFare = baseFare;
-            PerKm = perKm;
-            NightMultiplier = nightMultiplier;
-            PeakMultiplier = peakMultiplier;
+            LocationName = locationName;
+            Description = description;
             SetCreated(createdBy);
         }
 
-        public void UpdateRates(
-            decimal baseFare,
-            decimal perKm,
-            decimal nightMultiplier,
-            decimal peakMultiplier,
+        public void Update(
+            string locationName,
+            string description,
             string modifiedBy = "system")
         {
-            BaseFare = baseFare;
-            PerKm = perKm;
-            NightMultiplier = nightMultiplier;
-            PeakMultiplier = peakMultiplier;
+            LocationName = locationName;
+            Description = description;
             SetModified(modifiedBy);
         }
 }
