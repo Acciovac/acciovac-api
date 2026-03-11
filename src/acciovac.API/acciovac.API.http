@@ -52,3 +52,36 @@ Content-Type: application/json
 }
 
 ###
+
+# Get All Local Experiences
+GET {{acciovac.API_HostAddress}}/api/localexpirences
+Accept: application/json
+
+###
+
+# Add Local Experience
+POST {{acciovac.API_HostAddress}}/api/localexpirences
+Content-Type: application/json
+
+{
+  "locationName": "Traditional Cookery Class",
+  "description": "Learn to cook authentic Sri Lankan dishes with a local family."
+}
+
+###
+
+# Update Local Experience
+# Replace {id} with the actual GUID from the GET response
+PUT {{acciovac.API_HostAddress}}/api/localexpirences/{id}
+Content-Type: application/json
+
+{
+  "locationName": "Traditional Cookery Class",
+  "description": "Updated description for the cookery class experience."
+}
+
+###
+
+# Delete Local Experience
+# Replace {id} with the actual GUID from the GET response
+DELETE {{acciovac.API_HostAddress}}/api/localexpirences/{id}
