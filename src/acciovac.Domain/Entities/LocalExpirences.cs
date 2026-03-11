@@ -1,11 +1,12 @@
 using System;
+using acciovac.Domain.Common;
 
 namespace acciovac.Domain.Entities;
 
 public class LocalExpirences : AuditableEntity<Guid>
     {
-        public string LocationName { get; private set; }
-        public string Description { get; private set; }
+        public string LocationName { get; private set; } = null!;
+        public string Description { get; private set; } = null!;
 
         private LocalExpirences() { }
 
