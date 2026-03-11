@@ -1,0 +1,36 @@
+using acciovac.Application.Abstractions;
+using acciovac.Application.Common;
+using MediatR;
+
+namespace acciovac.Application.Behaviors.LocalExpirences.Commands.UpdateLocalExpirences
+{
+    public class UpdateLocalExpirencesCommandHandler : IRequestHandler<UpdateLocalExpirencesCommand, Result<Guid>>
+    {
+        private readonly ILocalExpirences _repository;
+
+        public UpdateLocalExpirencesCommandHandler(ILocalExpirences repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<Result<Guid>> Handle(UpdateLocalExpirencesCommand request, CancellationToken cancellationToken)
+        {
+            var localExperience = await _repository.GetByIdAsync(request.Id);
+
+            if (localExperience is null)
+            {
+                return Result<Guid>.Failure("Local experience not found");
+            }
+
+            localExperience.Update(
+                request.LocationName,
+                request.Description,
+                "system"
+            );
+
+            await _repository.UpdateAsync(localExperience);
+
+            return Result<Guid>.Success(localExperience.Id);
+        }
+    }
+}
