@@ -31,9 +31,7 @@ namespace acciovac.API.Controllers
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
-            {
-                return BadRequest(ApiResponse.Failure(result.Error));
-            }
+                return BadRequest(new { error = result.Error });
 
             return CreatedAtAction(
                 nameof(GetUser),
@@ -55,7 +53,7 @@ namespace acciovac.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(Guid id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var result = await _mediator.Send(new GetUserByIdQuery(id));
 
             if (user is null)
             {
