@@ -1,3 +1,4 @@
+using acciovac.API.Common;
 using acciovac.API.Middleware;
 using acciovac.Application;
 using acciovac.Application.Abstractions; // Added for IItineraryPlanner 
@@ -59,8 +60,7 @@ app.MapControllers();
 // Endpoints
 // --------------------
 
-app.MapGet("/health", () =>
-    Results.Ok("AccioVac API is running 🚀")
+app.MapGet("/health", () => Results.Ok(ApiResponse.Success(new { message = "AccioVac API is running 🚀" }))
 );
 
 app.Run();
