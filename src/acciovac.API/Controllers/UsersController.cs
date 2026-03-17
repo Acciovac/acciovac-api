@@ -1,3 +1,5 @@
+using acciovac.API.Common;
+using acciovac.Application.Abstractions;
 using acciovac.Application.Behaviors.Users.Commands.CreateUser;
 using acciovac.Application.Behaviors.Users.Commands.DeleteUser;
 using acciovac.Application.Behaviors.Users.Commands.UpdateUser;
@@ -13,10 +15,12 @@ namespace acciovac.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(IMediator mediator)
+        public UsersController(IMediator mediator, IUserRepository userRepository)
         {
             _mediator = mediator;
+            _userRepository = userRepository;
         }
 
         [HttpPost("create")]
@@ -27,8 +31,14 @@ namespace acciovac.API.Controllers
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
-                return BadRequest(new { error = result.Error });
+            {
+                return BadRequest(ApiResponse.Failure(result.Error));
+            }
 
+            return CreatedAtAction(
+                nameof(GetUser),
+                new { id = result.Value },
+                ApiResponse.Success(new { id = result.Value }));
             return CreatedAtAction(nameof(GetUser), new { id = result.Value }, new { id = result.Value });
         }
 
@@ -45,6 +55,21 @@ namespace acciovac.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(Guid id)
         {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user is null)
+            {
+                return NotFound(ApiResponse.Failure("User not found"));
+            }
+
+            return Ok(ApiResponse.Success(new
+            {
+                id = user.Id,
+                firebaseUid = user.FirebaseUid,
+                email = user.Email,
+                isActive = user.IsActive,
+                createdAt = user.CreatedAt
+            }));
             var result = await _mediator.Send(new GetUserByIdQuery(id));
 
             if (!result.IsSuccess)
