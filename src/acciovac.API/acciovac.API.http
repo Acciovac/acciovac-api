@@ -1,22 +1,58 @@
-@acciovac.API_HostAddress = http://localhost:5265
+@acciovac.API_HostAddress = http://localhost:8080
+@userId = 00000000-0000-0000-0000-000000000000
 
 GET {{acciovac.API_HostAddress}}/health
 Accept: application/json
 
 ###
 
-# Create User
+# ───────────── USERS ─────────────
+
+# Create User (defaults role to "User" if omitted)
 POST {{acciovac.API_HostAddress}}/api/users/create
 Content-Type: application/json
 
 {
   "firebaseUid": "test-firebase-uid-123",
   "email": "test@example.com",
+  "role": "Admin",
   "displayName": "Test User",
   "photoUrl": null,
   "phoneNumber": null,
   "createdBy": "system"
 }
+
+###
+
+# List All Users
+GET {{acciovac.API_HostAddress}}/api/users
+Accept: application/json
+
+###
+
+# Get User By Id
+# Replace @userId at the top with a real GUID
+GET {{acciovac.API_HostAddress}}/api/users/{{userId}}
+Accept: application/json
+
+###
+
+# Update User
+# Replace @userId at the top with a real GUID
+PUT {{acciovac.API_HostAddress}}/api/users/{{userId}}
+Content-Type: application/json
+
+{
+  "id": "{{userId}}",
+  "email": "updated@example.com",
+  "modifiedBy": "admin"
+}
+
+###
+
+# Delete (Soft-Delete) User
+# Replace @userId at the top with a real GUID
+DELETE {{acciovac.API_HostAddress}}/api/users/{{userId}}?modifiedBy=admin
 
 ###
 

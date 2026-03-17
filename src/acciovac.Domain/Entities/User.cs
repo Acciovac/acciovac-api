@@ -25,5 +25,17 @@ namespace acciovac.Domain.Entities
 
             SetCreated(createdBy);
         }
+
+        public void Update(string email, string modifiedBy)
+        {
+            Email = email;
+            SetModified(modifiedBy);
+        }
+
+        public void Deactivate(string modifiedBy)
+        {
+            IsActive = false;
+            SetModified(modifiedBy);
+        }
     }
 }
