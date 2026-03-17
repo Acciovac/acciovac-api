@@ -9,6 +9,7 @@ namespace acciovac.Application.Behaviors.Users.Commands.CreateUser
     public sealed record CreateUserCommand(
         string FirebaseUid,
         string Email,
+        string? Role,
         string? DisplayName,
         string? PhotoUrl,
         string? PhoneNumber,

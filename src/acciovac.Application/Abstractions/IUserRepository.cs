@@ -8,6 +8,6 @@ namespace acciovac.Application.Abstractions
     public interface IUserRepository
     {
         Task<User?> GetByFirebaseUidAsync(string firebaseUid);
-        Task AddAsync(User user);
+        Task AddAsync(User user, string role, string createdBy);
     }
 }

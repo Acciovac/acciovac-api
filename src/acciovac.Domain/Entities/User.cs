@@ -11,6 +11,7 @@ namespace acciovac.Domain.Entities
         public string Email { get; private set; }
         public bool IsActive { get; private set; }
         public DateTime CreatedAt { get; private set; }
+        public ICollection<UserRole> Roles { get; private set; } = new List<UserRole>();
 
         private User() { }
 

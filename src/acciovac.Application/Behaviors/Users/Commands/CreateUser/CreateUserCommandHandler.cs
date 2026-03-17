@@ -24,8 +24,10 @@ namespace acciovac.Application.Behaviors.Users.Commands.CreateUser
             }
 
             var user = new User(request.FirebaseUid, request.Email, request.CreatedBy);
-            
-            await _userRepository.AddAsync(user);
+            var role = string.IsNullOrWhiteSpace(request.Role) ? "User" : request.Role.Trim();
+            var createdBy = string.IsNullOrWhiteSpace(request.CreatedBy) ? "system" : request.CreatedBy;
+
+            await _userRepository.AddAsync(user, role, createdBy);
 
             return Result<Guid>.Success(user.Id);
         }

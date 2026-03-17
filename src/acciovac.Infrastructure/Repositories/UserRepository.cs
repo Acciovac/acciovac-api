@@ -20,9 +20,13 @@ namespace acciovac.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.FirebaseUid == firebaseUid);
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddAsync(User user, string roleName, string createdBy)
         {
+            var role = await _context.Roles.FirstOrDefaultAsync(r => r.Name == roleName)
+                ?? throw new InvalidOperationException($"Role '{roleName}' does not exist.");
+
             await _context.Users.AddAsync(user);
+            await _context.UserRoles.AddAsync(new UserRole(user.Id, role.Id, createdBy));
             await _context.SaveChangesAsync();
         }
     }
