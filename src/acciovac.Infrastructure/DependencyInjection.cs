@@ -22,12 +22,7 @@ namespace acciovac.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRateRepository, RateRepository>();
             services.AddScoped<ILocalExpirences, LocalExpirencesRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IAiRuleRepository, AiRuleRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
-
-            services.AddHttpClient<IGoogleMapsService, GoogleMapsService>();
-            services.AddHttpClient<IWeatherService, WeatherService>();
             return services;
         }
     }
