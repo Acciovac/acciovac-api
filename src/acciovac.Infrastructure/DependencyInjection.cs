@@ -20,8 +20,8 @@ namespace acciovac.Infrastructure
             services.AddScoped<IRateRepository, RateRepository>();
             services.AddScoped<ILocalExpirences, LocalExpirencesRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IAiRuleRepository, AiRuleRepository>();
             return services;
         }
     }
-
 }
