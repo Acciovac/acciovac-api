@@ -4,9 +4,6 @@ using acciovac.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace acciovac.Infrastructure
 {
@@ -22,6 +19,7 @@ namespace acciovac.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRateRepository, RateRepository>();
             services.AddScoped<ILocalExpirences, LocalExpirencesRepository>();
+            services.AddScoped<IAiRuleRepository, AiRuleRepository>();
             return services;
         }
     }

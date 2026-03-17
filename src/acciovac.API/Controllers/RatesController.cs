@@ -1,3 +1,4 @@
+using acciovac.API.Common;
 using acciovac.Application.Abstractions;
 using acciovac.Application.Behaviors.Rates.Commands.UpdateRate;
 using acciovac.Domain.Entities;
@@ -27,10 +28,10 @@ namespace acciovac.API.Controllers
             
             if (rate is null)
             {
-                return Ok(new { message = "No rates found" });
+                return Ok(ApiResponse.Success(new { message = "No rates found" }));
             }
 
-            return Ok(new 
+            return Ok(ApiResponse.Success(new 
             {
                 id = rate.Id,
                 baseFare = rate.BaseFare,
@@ -38,7 +39,7 @@ namespace acciovac.API.Controllers
                 nightMultiplier = rate.NightMultiplier,
                 peakMultiplier = rate.PeakMultiplier,
                 createdAt = rate.CreatedAt
-            });
+            }));
         }
 
         [HttpPost]
@@ -59,7 +60,7 @@ namespace acciovac.API.Controllers
             return CreatedAtAction(
                 nameof(GetActiveRate),
                 new { id = rate.Id },
-                new { id = rate.Id, message = "Rate created successfully" });
+                ApiResponse.Success(new { id = rate.Id, message = "Rate created successfully" }));
         }
 
         
@@ -81,10 +82,10 @@ namespace acciovac.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(new { error = result.Error });
+                return BadRequest(ApiResponse.Failure(result.Error));
             }
 
-            return Ok(new { id = result.Value, message = "Rate updated successfully" });
+            return Ok(ApiResponse.Success(new { id = result.Value, message = "Rate updated successfully" }));
         }
         
     }

@@ -11,10 +11,7 @@ namespace acciovac.Infrastructure.Services
     {
         private readonly AiOptions _options;
 
-        public GeminiItineraryPlanner(AiOptions options)
-        {
-            _options = options;
-        }
+        public GeminiItineraryPlanner(AiOptions options) => _options = options;
         public async Task<List<AiDayDto>> GeneratePlanAsync(string systemRules, string userPrompt, CancellationToken cancellationToken)
         {
             var client = new Client(apiKey: _options.ApiKey);
@@ -39,7 +36,8 @@ namespace acciovac.Infrastructure.Services
             var response = await client.Models.GenerateContentAsync(
                 model: _options.ModelId,
                 contents: userContent,
-                config: config
+                config: config,
+                cancellationToken: cancellationToken
             );
 
             var generatedText = response.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
