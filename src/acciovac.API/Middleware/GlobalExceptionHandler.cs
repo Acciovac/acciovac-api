@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using acciovac.API.Common;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,15 +20,7 @@ namespace acciovac.API.Middleware
                     .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
                     .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
 
-                var problemDetails = new ValidationProblemDetails(errors)
-                {
-                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                    Title = "One or more validation errors occurred.",
-                    Status = StatusCodes.Status400BadRequest,
-                    Instance = httpContext.Request.Path
-                };
-
-                await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+                await httpContext.Response.WriteAsJsonAsync(ApiResponse.Failure("Validation error", new { errors }), cancellationToken);
                 return true;
             }
 

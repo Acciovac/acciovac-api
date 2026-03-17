@@ -1,3 +1,4 @@
+using acciovac.API.Common;
 using acciovac.Application.Abstractions;
 using acciovac.Application.Behaviors.LocalExpirences.Commands.AddLocalExpirences;
 using acciovac.Application.Behaviors.LocalExpirences.Commands.DeleteLocalExpirences;
@@ -25,13 +26,15 @@ namespace acciovac.API.Controllers
         {
             var result = await _mediator.Send(new GetAllLocalExpirencesQuery());
 
-            return Ok(result.Value?.Select(x => new
+            var experiences = result.Value?.Select(x => new
             {
                 id = x.Id,
                 locationName = x.LocationName,
                 description = x.Description,
                 createdAt = x.CreatedAt
-            }));
+            }) ?? Enumerable.Empty<object>();
+
+            return Ok(ApiResponse.Success(experiences));
         }
 
         [HttpPost]
@@ -44,10 +47,10 @@ namespace acciovac.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return BadRequest(new { error = result.Error });
+                return BadRequest(ApiResponse.Failure(result.Error));
             }
 
-            return CreatedAtAction(nameof(GetAll), new { id = result.Value }, new { id = result.Value, message = "Local experience added successfully" });
+            return CreatedAtAction(nameof(GetAll), new { id = result.Value }, ApiResponse.Success(new { id = result.Value, message = "Local experience added successfully" }));
         }
 
         [HttpPut("{id:guid}")]
@@ -61,10 +64,10 @@ namespace acciovac.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return NotFound(new { error = result.Error });
+                return NotFound(ApiResponse.Failure(result.Error));
             }
 
-            return Ok(new { id = result.Value, message = "Local experience updated successfully" });
+            return Ok(ApiResponse.Success(new { id = result.Value, message = "Local experience updated successfully" }));
         }
 
         [HttpDelete("{id:guid}")]
@@ -76,10 +79,10 @@ namespace acciovac.API.Controllers
 
             if (!result.IsSuccess)
             {
-                return NotFound(new { error = result.Error });
+                return NotFound(ApiResponse.Failure(result.Error));
             }
 
-            return Ok(new { message = "Local experience deleted successfully" });
+            return Ok(ApiResponse.Success(new { message = "Local experience deleted successfully" }));
         }
     }
 
