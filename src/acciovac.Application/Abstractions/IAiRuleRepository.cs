@@ -7,6 +7,7 @@ namespace acciovac.Application.Abstractions
 {
     public interface IAiRuleRepository
     {
+        Task AddAsync(AiRule aiRule);
         Task<List<AiRule>> GetActiveRulesAsync();
     }
 }
