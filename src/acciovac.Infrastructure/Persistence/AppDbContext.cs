@@ -16,6 +16,7 @@ namespace acciovac.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<AiRule> AiRules => Set<AiRule>();
         public DbSet<Rate> Rates => Set<Rate>();
+        public DbSet<LocalExpirences> LocalExpirences => Set<LocalExpirences>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

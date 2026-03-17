@@ -18,25 +18,29 @@ namespace acciovac.Domain.Entities
             decimal baseFare,
             decimal perKm,
             decimal nightMultiplier,
-            decimal peakMultiplier)
+            decimal peakMultiplier,
+            string createdBy = "system")
         {
             Id = Guid.NewGuid();
             BaseFare = baseFare;
             PerKm = perKm;
             NightMultiplier = nightMultiplier;
             PeakMultiplier = peakMultiplier;
+            SetCreated(createdBy);
         }
 
         public void UpdateRates(
             decimal baseFare,
             decimal perKm,
             decimal nightMultiplier,
-            decimal peakMultiplier)
+            decimal peakMultiplier,
+            string modifiedBy = "system")
         {
             BaseFare = baseFare;
             PerKm = perKm;
             NightMultiplier = nightMultiplier;
             PeakMultiplier = peakMultiplier;
+            SetModified(modifiedBy);
         }
     }
 }

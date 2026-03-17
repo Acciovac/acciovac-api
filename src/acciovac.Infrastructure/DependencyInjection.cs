@@ -20,7 +20,8 @@ namespace acciovac.Infrastructure
                 options.UseNpgsql(config.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUserRepository, UserRepository>();
-
+            services.AddScoped<IRateRepository, RateRepository>();
+            services.AddScoped<ILocalExpirences, LocalExpirencesRepository>();
             return services;
         }
     }
