@@ -28,7 +28,7 @@ namespace acciovac.Application.Behaviors.AiRules.Commands.CreateAiRule
                 request.Code,
                 request.RuleText,
                 request.Priority,
-                request.CreatedBy
+                "Super Admin"
             );
 
             await _aiRuleRepository.AddAsync(rule);
