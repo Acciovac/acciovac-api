@@ -42,22 +42,34 @@ namespace acciovac.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateAiRuleRequest request)
+        public async Task<IActionResult> Create([FromBody] List<CreateAiRuleRequest> requests)
         {
-            var command = new CreateAiRuleCommand(request.Code, request.RuleText, request.Priority, request.CreatedBy);
-            var result = await _mediator.Send(command);
-
-            if (!result.IsSuccess)
+            if (requests is null || requests.Count == 0)
             {
-                return BadRequest(ApiResponse.Failure(result.Error));
+                return BadRequest(ApiResponse.Failure("Request list is empty"));
+            }
+
+            var createdIds = new List<Guid>();
+
+            foreach (var request in requests)
+            {
+                var command = new CreateAiRuleCommand(request.Code, request.RuleText, request.Priority);
+                var result = await _mediator.Send(command);
+
+                if (!result.IsSuccess)
+                {
+                    return BadRequest(ApiResponse.Failure(result.Error));
+                }
+
+                createdIds.Add(result.Value);
             }
 
             return CreatedAtAction(
                 nameof(GetActiveRules),
-                new { id = result.Value },
-                ApiResponse.Success(new { id = result.Value, message = "AI rule created successfully" }));
+                new { count = createdIds.Count },
+                ApiResponse.Success(new { ids = createdIds, message = "AI rules created successfully" }));
         }
     }
 
-    public record CreateAiRuleRequest(string Code, string RuleText, int Priority, string CreatedBy);
+    public record CreateAiRuleRequest(string Code, string RuleText, int Priority);
 }
