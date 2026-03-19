@@ -1,8 +1,9 @@
-﻿using acciovac.Application.Abstractions;
+using acciovac.Application.Abstractions;
 using acciovac.Domain.DTOs;
 using acciovac.Infrastructure.Configuration;
 using Google.GenAI;
 using Google.GenAI.Types;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
 
 namespace acciovac.Infrastructure.Services
@@ -11,7 +12,7 @@ namespace acciovac.Infrastructure.Services
     {
         private readonly AiOptions _options;
 
-        public GeminiItineraryPlanner(AiOptions options) => _options = options;
+        public GeminiItineraryPlanner(IOptions<AiOptions> options) => _options = options.Value;
         public async Task<List<AiDayDto>> GeneratePlanAsync(string systemRules, string userPrompt, CancellationToken cancellationToken)
         {
             var client = new Client(apiKey: _options.ApiKey);
@@ -30,7 +31,7 @@ namespace acciovac.Infrastructure.Services
             {
                 SystemInstruction = systemContent,
                 ResponseMimeType = "application/json",
-                Temperature = 0.7f
+                Temperature = 0.3f
             };
 
             var response = await client.Models.GenerateContentAsync(
@@ -42,15 +43,39 @@ namespace acciovac.Infrastructure.Services
 
             var generatedText = response.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text;
 
-            if (string.IsNullOrEmpty(generatedText))
+            if (string.IsNullOrWhiteSpace(generatedText))
             {
                 throw new Exception("Gemini returned an empty response.");
             }
 
+            var trimmed = generatedText.Trim();
             var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            return JsonSerializer.Deserialize<List<AiDayDto>>(generatedText, serializerOptions)
-                   ?? [];
+            try
+            {
+                if (trimmed.StartsWith("["))
+                {
+                    return JsonSerializer.Deserialize<List<AiDayDto>>(trimmed, serializerOptions) ?? [];
+                }
+
+                var single = JsonSerializer.Deserialize<AiDayDto>(trimmed, serializerOptions);
+                if (single is not null)
+                {
+                    return new List<AiDayDto> { single };
+                }
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"Failed to parse Gemini response: {ex.Message}. Raw: {SafeSnippet(trimmed)}", ex);
+            }
+
+            throw new Exception($"Gemini response was not valid JSON array. Raw: {SafeSnippet(trimmed)}");
+        }
+
+        private static string SafeSnippet(string text)
+        {
+            const int max = 500;
+            return text.Length <= max ? text : text.Substring(0, max) + "...";
         }
     }
 }
