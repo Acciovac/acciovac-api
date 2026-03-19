@@ -24,44 +24,45 @@ namespace acciovac.Infrastructure.Services
             };
 
             var schemaPrompt = @"
-Return ONLY valid JSON with this exact shape:
-{
-  ""itineraryPlan"": {
-    ""tripOverview"": {
-      ""traveler"": ""string"",
-      ""budget"": 0,
-      ""theme"": ""string"",
-      ""locations"": [""string""]
-    },
-    ""dailySchedule"": [
-      {
-        ""date"": ""yyyy-MM-dd"",
-        ""location"": ""string"",
-        ""imageLink"": ""https://..."",
-        ""activities"": [
-          {
-            ""startTime"": ""HH:mm:ss"",
-            ""endTime"": ""HH:mm:ss"",
-            ""title"": ""string"",
-            ""description"": ""string""
-          }
-        ]
-      }
-    ],
-    ""budgetBreakdown"": {
-      ""currency"": ""string"",
-      ""totalEstimated"": 0,
-      ""categories"": {
-        ""transport"": 0,
-        ""accommodation"": 0,
-        ""activities"": 0,
-        ""foodAndDrinks"": 0,
-        ""miscellaneous"": 0
-      }
-    }
-  }
-}
-Do not add markdown, explanations, or alternative formats.";
+                Return ONLY valid JSON with this exact shape:
+                {
+                  ""itineraryPlan"": {
+                    ""tripOverview"": {
+                      ""traveler"": ""string"",
+                      ""budget"": 0,
+                      ""theme"": ""string"",
+                      ""locations"": [""string""]
+                    },
+                    ""dailySchedule"": [
+                      {
+                        ""date"": ""yyyy-MM-dd"",
+                        ""location"": ""string"",
+                        ""imageLink"": ""https://..."",
+                        ""activities"": [
+                          {
+                            ""startTime"": ""HH:mm:ss"",
+                            ""endTime"": ""HH:mm:ss"",
+                            ""title"": ""string"",
+                            ""visitLocation"": ""string (exact place name only, no extra text)"",
+                            ""description"": ""string""
+                          }
+                        ]
+                      }
+                    ],
+                    ""budgetBreakdown"": {
+                      ""currency"": ""string"",
+                      ""totalEstimated"": 0,
+                      ""categories"": {
+                        ""transport"": 0,
+                        ""accommodation"": 0,
+                        ""activities"": 0,
+                        ""foodAndDrinks"": 0,
+                        ""miscellaneous"": 0
+                      }
+                    }
+                  }
+                }
+                Do not add markdown, explanations, or alternative formats.";
 
             var userContent = new Content
             {
