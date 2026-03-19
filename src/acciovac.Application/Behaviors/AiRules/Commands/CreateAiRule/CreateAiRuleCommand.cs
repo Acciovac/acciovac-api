@@ -9,7 +9,6 @@ namespace acciovac.Application.Behaviors.AiRules.Commands.CreateAiRule
     public sealed record CreateAiRuleCommand(
         string Code,
         string RuleText,
-        int Priority,
-        string CreatedBy
+        int Priority
         ) : IRequest<Result<Guid>>;
 }
