@@ -4,7 +4,7 @@ namespace acciovac.Application.Abstractions
 {
     public interface IItineraryPlanner
     {
-        Task<List<AiDayDto>> GeneratePlanAsync(
+        Task<AiItineraryResponseDto> GeneratePlanAsync(
             string systemRules,
             string userPrompt,
             CancellationToken cancellationToken);
