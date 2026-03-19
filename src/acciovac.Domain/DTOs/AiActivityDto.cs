@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace acciovac.Domain.DTOs
 {
-    public record AiDayDto(
-        int DayNumber,
-        string Theme, // e.g., "Arrival in Colombo"
-        List<AiActivityDto> Activities
-    );
+    public class AiDayDto
+    {
+        public string Date { get; set; } = string.Empty;
+        public string BaseLocation { get; set; } = string.Empty;
+        public List<AiActivityDto> Activities { get; set; } = new();
+        public string OvernightStay { get; set; } = string.Empty;
+        public string BookingLink { get; set; } = string.Empty;
+    }
 
-    public record AiActivityDto(
-        string Time,         // e.g., "09:00 AM"
-        string Category,     // e.g., "FOOD", "CULTURE", "STAY RECOMMENDATION", "TRANSIT"
-        string Title,        // e.g., "Breakfast at Gallery Café"
-        string Description,  // e.g., "Famous for its architecture..."
-        string CostDetails,  // e.g., "Ticket: 1,500 LKR" or "$60 per night"
-        double Lat,
-        double Lon
-    );
+    public class AiActivityDto
+    {
+        public string Time { get; set; } = string.Empty;
+        public string Activity { get; set; } = string.Empty;
+        public string PlaceName { get; set; } = string.Empty;
+        public string TravelTimeFromPrevious { get; set; } = string.Empty;
+        public string Weather { get; set; } = string.Empty;
+    }
 }
