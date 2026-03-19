@@ -62,8 +62,23 @@ namespace acciovac.Domain.DTOs
         [JsonPropertyName("title")]
         public string Title { get; set; } = string.Empty;
 
+        [JsonPropertyName("visitLocation")]
+        public string VisitLocation { get; set; } = string.Empty;
+
+        [JsonPropertyName("coordinates")]
+        public CoordinatesDto Coordinates { get; set; } = new();
+
         [JsonPropertyName("description")]
         public string Description { get; set; } = string.Empty;
+    }
+
+    public class CoordinatesDto
+    {
+        [JsonPropertyName("latitude")]
+        public double Latitude { get; set; }
+
+        [JsonPropertyName("longitude")]
+        public double Longitude { get; set; }
     }
 
     public class BudgetBreakdownDto
