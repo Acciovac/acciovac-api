@@ -1,22 +1,98 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace acciovac.Domain.DTOs
 {
+    public class AiItineraryResponseDto
+    {
+        [JsonPropertyName("itineraryPlan")]
+        public AiItineraryPlanDto ItineraryPlan { get; set; } = new();
+    }
+
+    public class AiItineraryPlanDto
+    {
+        [JsonPropertyName("tripOverview")]
+        public TripOverviewDto TripOverview { get; set; } = new();
+
+        [JsonPropertyName("dailySchedule")]
+        public List<AiDayDto> DailySchedule { get; set; } = new();
+
+        [JsonPropertyName("budgetBreakdown")]
+        public BudgetBreakdownDto BudgetBreakdown { get; set; } = new();
+    }
+
+    public class TripOverviewDto
+    {
+        [JsonPropertyName("traveler")]
+        public string Traveler { get; set; } = string.Empty;
+
+        [JsonPropertyName("budget")]
+        public decimal Budget { get; set; }
+
+        [JsonPropertyName("theme")]
+        public string Theme { get; set; } = string.Empty;
+
+        [JsonPropertyName("locations")]
+        public List<string> Locations { get; set; } = new();
+    }
+
     public class AiDayDto
     {
+        [JsonPropertyName("date")]
         public string Date { get; set; } = string.Empty;
-        public string BaseLocation { get; set; } = string.Empty;
+
+        [JsonPropertyName("location")]
+        public string Location { get; set; } = string.Empty;
+
+        [JsonPropertyName("imageLink")]
+        public string ImageLink { get; set; } = string.Empty;
+
+        [JsonPropertyName("activities")]
         public List<AiActivityDto> Activities { get; set; } = new();
-        public string OvernightStay { get; set; } = string.Empty;
-        public string BookingLink { get; set; } = string.Empty;
     }
 
     public class AiActivityDto
     {
-        public string Time { get; set; } = string.Empty;
-        public string Activity { get; set; } = string.Empty;
-        public string PlaceName { get; set; } = string.Empty;
-        public string TravelTimeFromPrevious { get; set; } = string.Empty;
-        public string Weather { get; set; } = string.Empty;
+        [JsonPropertyName("startTime")]
+        public string StartTime { get; set; } = string.Empty;
+
+        [JsonPropertyName("endTime")]
+        public string EndTime { get; set; } = string.Empty;
+
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
+        [JsonPropertyName("description")]
+        public string Description { get; set; } = string.Empty;
+    }
+
+    public class BudgetBreakdownDto
+    {
+        [JsonPropertyName("currency")]
+        public string Currency { get; set; } = string.Empty;
+
+        [JsonPropertyName("totalEstimated")]
+        public decimal TotalEstimated { get; set; }
+
+        [JsonPropertyName("categories")]
+        public BudgetCategoriesDto Categories { get; set; } = new();
+    }
+
+    public class BudgetCategoriesDto
+    {
+        [JsonPropertyName("transport")]
+        public decimal Transport { get; set; }
+
+        [JsonPropertyName("accommodation")]
+        public decimal Accommodation { get; set; }
+
+        [JsonPropertyName("activities")]
+        public decimal Activities { get; set; }
+
+        [JsonPropertyName("foodAndDrinks")]
+        public decimal FoodAndDrinks { get; set; }
+
+        [JsonPropertyName("miscellaneous")]
+        public decimal Miscellaneous { get; set; }
     }
 }
