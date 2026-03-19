@@ -43,12 +43,12 @@ namespace acciovac.API.Controllers
                                 End location: {request.EndLocation?.Name} ({request.EndLocation?.Type}, {request.EndLocation?.Latitude}, {request.EndLocation?.Longitude})
                                 Daily free times:\n{string.Join("\n", freeTimes)}
 
-                                Return ONLY JSON matching the required schema.";
+                                Return ONLY JSON with root key itineraryPlan and no alternate response formats.";
 
             var command = new GenerateItineraryCommand(userPrompt, locations);
             var result = await _mediator.Send(command, cancellationToken);
 
-            return Ok(ApiResponse.Success(result));
+            return Ok(result);
         }
     }
 

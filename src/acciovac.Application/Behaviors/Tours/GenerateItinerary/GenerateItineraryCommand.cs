@@ -7,5 +7,5 @@ namespace acciovac.Application.Behaviors.Tours.GenerateItinerary
     public sealed record GenerateItineraryCommand(
         string UserPrompt,
         List<string> Locations
-    ) : IRequest<List<AiDayDto>>;
+    ) : IRequest<AiItineraryResponseDto>;
 }

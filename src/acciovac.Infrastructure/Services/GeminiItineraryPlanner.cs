@@ -13,7 +13,8 @@ namespace acciovac.Infrastructure.Services
         private readonly AiOptions _options;
 
         public GeminiItineraryPlanner(IOptions<AiOptions> options) => _options = options.Value;
-        public async Task<List<AiDayDto>> GeneratePlanAsync(string systemRules, string userPrompt, CancellationToken cancellationToken)
+
+        public async Task<AiItineraryResponseDto> GeneratePlanAsync(string systemRules, string userPrompt, CancellationToken cancellationToken)
         {
             var client = new Client(apiKey: _options.ApiKey);
 
@@ -22,16 +23,59 @@ namespace acciovac.Infrastructure.Services
                 Parts = [new Part { Text = systemRules }]
             };
 
+            var schemaPrompt = @"
+Return ONLY valid JSON with this exact shape:
+{
+  ""itineraryPlan"": {
+    ""tripOverview"": {
+      ""traveler"": ""string"",
+      ""budget"": 0,
+      ""theme"": ""string"",
+      ""locations"": [""string""]
+    },
+    ""dailySchedule"": [
+      {
+        ""date"": ""yyyy-MM-dd"",
+        ""location"": ""string"",
+        ""imageLink"": ""https://..."",
+        ""activities"": [
+          {
+            ""startTime"": ""HH:mm:ss"",
+            ""endTime"": ""HH:mm:ss"",
+            ""title"": ""string"",
+            ""description"": ""string""
+          }
+        ]
+      }
+    ],
+    ""budgetBreakdown"": {
+      ""currency"": ""string"",
+      ""totalEstimated"": 0,
+      ""categories"": {
+        ""transport"": 0,
+        ""accommodation"": 0,
+        ""activities"": 0,
+        ""foodAndDrinks"": 0,
+        ""miscellaneous"": 0
+      }
+    }
+  }
+}
+Do not add markdown, explanations, or alternative formats.";
+
             var userContent = new Content
             {
-                Parts = [new Part { Text = userPrompt }]
+                Parts = [
+                    new Part { Text = userPrompt },
+                    new Part { Text = schemaPrompt }
+                ]
             };
 
             var config = new GenerateContentConfig
             {
                 SystemInstruction = systemContent,
                 ResponseMimeType = "application/json",
-                Temperature = 0.3f
+                Temperature = 0.1f
             };
 
             var response = await client.Models.GenerateContentAsync(
@@ -53,23 +97,19 @@ namespace acciovac.Infrastructure.Services
 
             try
             {
-                if (trimmed.StartsWith("["))
+                var result = JsonSerializer.Deserialize<AiItineraryResponseDto>(trimmed, serializerOptions);
+
+                if (result?.ItineraryPlan?.DailySchedule is null || result.ItineraryPlan.DailySchedule.Count == 0)
                 {
-                    return JsonSerializer.Deserialize<List<AiDayDto>>(trimmed, serializerOptions) ?? [];
+                    throw new Exception($"Gemini response missing required itineraryPlan.dailySchedule. Raw: {SafeSnippet(trimmed)}");
                 }
 
-                var single = JsonSerializer.Deserialize<AiDayDto>(trimmed, serializerOptions);
-                if (single is not null)
-                {
-                    return new List<AiDayDto> { single };
-                }
+                return result;
             }
             catch (JsonException ex)
             {
                 throw new Exception($"Failed to parse Gemini response: {ex.Message}. Raw: {SafeSnippet(trimmed)}", ex);
             }
-
-            throw new Exception($"Gemini response was not valid JSON array. Raw: {SafeSnippet(trimmed)}");
         }
 
         private static string SafeSnippet(string text)
