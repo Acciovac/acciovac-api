@@ -22,6 +22,7 @@ namespace acciovac.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRateRepository, RateRepository>();
             services.AddScoped<ILocalExpirences, LocalExpirencesRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
             return services;
         }
     }
