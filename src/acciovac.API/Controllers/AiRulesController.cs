@@ -1,6 +1,8 @@
 ﻿using acciovac.API.Common;
-using acciovac.Application.Abstractions;
 using acciovac.Application.Behaviors.AiRules.Commands.CreateAiRule;
+using acciovac.Application.Behaviors.AiRules.Commands.DeactivateAiRule;
+using acciovac.Application.Behaviors.AiRules.Queries.GetActiveAiRules;
+using acciovac.Application.Behaviors.AiRules.Queries.GetAiRuleById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,21 +14,19 @@ namespace acciovac.API.Controllers
     public class AiRulesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IAiRuleRepository _aiRuleRepository;
 
-        public AiRulesController(IMediator mediator, IAiRuleRepository aiRuleRepository)
+        public AiRulesController(IMediator mediator)
         {
             _mediator = mediator;
-            _aiRuleRepository = aiRuleRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetActiveRules()
         {
-            var rules = await _aiRuleRepository.GetActiveRulesAsync();
+            var result = await _mediator.Send(new GetActiveAiRulesQuery());
 
-            var response = rules.Select(r => new
+            var response = result.Value?.Select(r => new
             {
                 id = r.Id,
                 code = r.Code,
@@ -34,9 +34,34 @@ namespace acciovac.API.Controllers
                 priority = r.Priority,
                 isActive = r.IsActive,
                 createdAt = r.CreatedAt
-            });
+            }) ?? Enumerable.Empty<object>();
 
             return Ok(ApiResponse.Success(response));
+        }
+
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var result = await _mediator.Send(new GetAiRuleByIdQuery(id));
+
+            if (!result.IsSuccess)
+            {
+                return NotFound(ApiResponse.Failure(result.Error));
+            }
+
+            var rule = result.Value;
+
+            return Ok(ApiResponse.Success(new
+            {
+                id = rule!.Id,
+                code = rule.Code,
+                ruleText = rule.RuleText,
+                priority = rule.Priority,
+                isActive = rule.IsActive,
+                createdAt = rule.CreatedAt
+            }));
         }
 
         [HttpPost]
@@ -68,6 +93,27 @@ namespace acciovac.API.Controllers
                 nameof(GetActiveRules),
                 new { count = createdIds.Count },
                 ApiResponse.Success(new { ids = createdIds, message = "AI rules created successfully" }));
+        }
+
+        [HttpPatch("{id:guid}/deactivate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Deactivate(Guid id)
+        {
+            var result = await _mediator.Send(new DeactivateAiRuleCommand(id));
+
+            if (!result.IsSuccess)
+            {
+                if (result.Error == "AI rule not found")
+                {
+                    return NotFound(ApiResponse.Failure(result.Error));
+                }
+
+                return BadRequest(ApiResponse.Failure(result.Error));
+            }
+
+            return Ok(ApiResponse.Success(new { id = result.Value, message = "AI rule deactivated successfully" }));
         }
     }
 
