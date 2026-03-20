@@ -21,7 +21,6 @@ namespace acciovac.Infrastructure.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
-
         public async Task<IReadOnlyList<Message>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Messages
