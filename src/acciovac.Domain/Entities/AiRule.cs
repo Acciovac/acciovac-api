@@ -32,5 +32,11 @@ namespace acciovac.Domain.Entities
 
             SetModified(modifiedBy);
         }
+
+        public void Deactivate(string modifiedBy)
+        {
+            IsActive = false;
+            SetModified(modifiedBy);
+        }
     }
 }
