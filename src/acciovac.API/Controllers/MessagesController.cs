@@ -1,6 +1,8 @@
 using acciovac.Application.Behaviors.Messages.Commands.DeleteMessage;
+using acciovac.Application.Behaviors.Messages.Commands.CreateMessage;
 using acciovac.Application.Behaviors.Messages.Commands.MarkMessageAsRead;
 using acciovac.Application.Behaviors.Messages.Commands.MarkMessageAsResolved;
+using acciovac.Application.Behaviors.Messages.Queries.GetAllMessages;
 using acciovac.Application.Behaviors.Messages.Queries.GetUserMessages;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -20,17 +22,40 @@ namespace acciovac.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllMessages()
+        {
+            var result = await _mediator.Send(new GetAllMessagesQuery());
+            return Ok(result.Value);
+        }
+
+        [HttpGet("user/{userId:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetUserMessages([FromQuery] Guid userId)
+        public async Task<IActionResult> GetUserMessages(Guid userId)
         {
             if (userId == Guid.Empty)
             {
-                return BadRequest(new { error = "Query parameter 'userId' is required." });
+                return BadRequest(new { error = "Route parameter 'userId' is required." });
             }
 
             var result = await _mediator.Send(new GetUserMessagesQuery(userId));
 
             return Ok(result.Value);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateMessage([FromBody] CreateMessageCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new { error = result.Error });
+            }
+
+            return StatusCode(StatusCodes.Status201Created, new { id = result.Value });
         }
 
         [HttpPut("{id:guid}/read")]
