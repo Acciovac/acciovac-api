@@ -14,6 +14,14 @@ namespace acciovac.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<IReadOnlyList<Message>> GetAllAsync()
+        {
+            return await _context.Messages
+                .OrderByDescending(x => x.CreatedAt)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IReadOnlyList<Message>> GetByUserIdAsync(Guid userId)
         {
             return await _context.Messages
