@@ -4,6 +4,7 @@ namespace acciovac.Application.Abstractions
 {
     public interface IMessageRepository
     {
+        Task<IReadOnlyList<Message>> GetAllAsync();
         Task<IReadOnlyList<Message>> GetByUserIdAsync(Guid userId);
         Task<Message?> GetByIdAsync(Guid id);
         Task AddAsync(Message message);
