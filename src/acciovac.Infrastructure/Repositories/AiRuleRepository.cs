@@ -25,5 +25,16 @@ namespace acciovac.Infrastructure.Repositories
                 .Where(r => r.IsActive)
                 .ToListAsync();
         }
+
+        public async Task<AiRule?> GetByIdAsync(Guid id)
+        {
+            return await _context.AiRules.FirstOrDefaultAsync(r => r.Id == id);
+        }
+
+        public async Task UpdateAsync(AiRule aiRule)
+        {
+            _context.AiRules.Update(aiRule);
+            await _context.SaveChangesAsync();
+        }
     }
 }

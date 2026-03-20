@@ -9,5 +9,7 @@ namespace acciovac.Application.Abstractions
     {
         Task AddAsync(AiRule aiRule);
         Task<List<AiRule>> GetActiveRulesAsync();
+        Task<AiRule?> GetByIdAsync(Guid id);
+        Task UpdateAsync(AiRule aiRule);
     }
 }
