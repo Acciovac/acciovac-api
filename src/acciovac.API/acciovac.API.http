@@ -1,4 +1,5 @@
 @acciovac.API_HostAddress = http://localhost:5265
+@userId = 129f1842-02b1-4f12-8a96-695603b2f311
 
 GET {{acciovac.API_HostAddress}}/health
 Accept: application/json
@@ -85,3 +86,49 @@ Content-Type: application/json
 # Delete Local Experience
 # Replace {id} with the actual GUID from the GET response
 DELETE {{acciovac.API_HostAddress}}/api/localexpirences/{id}
+
+###
+
+# ───────────── MESSAGES ─────────────
+
+# Get All Messages
+GET {{acciovac.API_HostAddress}}/api/messages
+Accept: application/json
+
+###
+
+# Create Message
+POST {{acciovac.API_HostAddress}}/api/messages
+Content-Type: application/json
+
+{
+  "userId": "129f1842-02b1-4f12-8a96-695603b2f311",
+  "subject": "Need help with booking",
+  "body": "I could not complete my booking flow. Please check.",
+  "createdBy": "system"
+}
+
+###
+
+# Get User Messages
+# Replace @userId at the top with a real GUID
+GET {{acciovac.API_HostAddress}}/api/messages/user/{{userId}}
+Accept: application/json
+
+###
+
+# Mark Message as Read
+# First run GET to get the message ID, then replace {message-id} below
+PUT {{acciovac.API_HostAddress}}/api/messages/{message-id}/read
+
+###
+
+# Mark Message as Resolved
+# First run GET to get the message ID, then replace {message-id} below
+PUT {{acciovac.API_HostAddress}}/api/messages/{message-id}/resolve
+
+###
+
+# Delete Message
+# Replace {message-id} with the actual GUID from the GET response
+DELETE {{acciovac.API_HostAddress}}/api/messages/{message-id}
