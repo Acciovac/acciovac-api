@@ -50,7 +50,7 @@ namespace acciovac.API.Controllers
             var command = new GenerateItineraryCommand(userPrompt, locations);
             var result = await _mediator.Send(command, cancellationToken);
 
-            return Ok(result);
+            return Ok(ApiResponse.Success(result));
         }
     }
 
