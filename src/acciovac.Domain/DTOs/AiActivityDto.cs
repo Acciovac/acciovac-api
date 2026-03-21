@@ -11,6 +11,9 @@ namespace acciovac.Domain.DTOs
 
     public class AiItineraryPlanDto
     {
+        [JsonPropertyName("title")]
+        public string Title { get; set; } = string.Empty;
+
         [JsonPropertyName("tripOverview")]
         public TripOverviewDto TripOverview { get; set; } = new();
 

@@ -27,6 +27,7 @@ namespace acciovac.Infrastructure.Services
                 Return ONLY valid JSON with this exact shape:
                 {
                   ""itineraryPlan"": {
+                    ""title"": ""string"",
                     ""tripOverview"": {
                       ""traveler"": ""string"",
                       ""budget"": 0,

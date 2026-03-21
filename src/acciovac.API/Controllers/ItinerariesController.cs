@@ -71,6 +71,7 @@ namespace acciovac.API.Controllers
                                 Start location: {request.StartLocation?.Name} ({request.StartLocation?.Type}, {request.StartLocation?.Latitude}, {request.StartLocation?.Longitude})
                                 End location: {request.EndLocation?.Name} ({request.EndLocation?.Type}, {request.EndLocation?.Latitude}, {request.EndLocation?.Longitude})
                                 Daily free times:\n{string.Join("\n", freeTimes)}
+                                Generate a short, catchy title (max 4 words) based on destination, theme, and travel type.
 
                                 Return ONLY JSON with root key itineraryPlan and no alternate response formats.";
 
