@@ -11,7 +11,7 @@
 *.sln.docstates
 *.env
 appsettings.json
-appsettings.Development.json
+appsettings.Development.json 
 
 
 
