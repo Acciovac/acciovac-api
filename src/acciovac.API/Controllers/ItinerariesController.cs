@@ -27,28 +27,28 @@ namespace acciovac.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Generate([FromBody] GenerateItineraryRequest request, CancellationToken cancellationToken)
         {
-            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+            //var authHeader = Request.Headers.Authorization.FirstOrDefault();
 
-            if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                return Unauthorized(ApiResponse.Failure("Missing or invalid Authorization header"));
-            }
+            //if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            //{
+            //    return Unauthorized(ApiResponse.Failure("Missing or invalid Authorization header"));
+            //}
 
-            var token = authHeader["Bearer ".Length..].Trim();
+            //var token = authHeader["Bearer ".Length..].Trim();
 
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return Unauthorized(ApiResponse.Failure("Firebase token is required"));
-            }
+            //if (string.IsNullOrWhiteSpace(token))
+            //{
+            //    return Unauthorized(ApiResponse.Failure("Firebase token is required"));
+            //}
 
-            try
-            {
-                await _firebaseAuthService.VerifyTokenAsync(token);
-            }
-            catch
-            {
-                return Unauthorized(ApiResponse.Failure("Invalid Firebase token"));
-            }
+            //try
+            //{
+            //    await _firebaseAuthService.VerifyTokenAsync(token);
+            //}
+            //catch
+            //{
+            //    return Unauthorized(ApiResponse.Failure("Invalid Firebase token"));
+            //}
 
             if (request is null)
             {
