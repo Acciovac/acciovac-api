@@ -10,15 +10,18 @@ namespace acciovac.Application.Behaviors.Tours.GenerateItinerary
         private readonly IAppDbContext _context;
         private readonly IItineraryPlanner _planner;
         private readonly IGoogleMapsService _googleMaps;
+        private readonly IUnsplashImageService _unsplashImageService;
 
         public GenerateItineraryCommandHandler(
             IAppDbContext context,
             IItineraryPlanner planner,
-            IGoogleMapsService googleMaps)
+            IGoogleMapsService googleMaps,
+            IUnsplashImageService unsplashImageService)
         {
             _context = context;
             _planner = planner;
             _googleMaps = googleMaps;
+            _unsplashImageService = unsplashImageService;
         }
 
         public async Task<AiItineraryResponseDto> Handle(GenerateItineraryCommand request, CancellationToken cancellationToken)
@@ -56,6 +59,13 @@ Additional constraints:
                     activity.Coordinates.Latitude = lat;
                     activity.Coordinates.Longitude = lng;
                 }
+
+                var imageTarget = day.Activities
+                    .Select(a => a.VisitLocation)
+                    .FirstOrDefault(v => !string.IsNullOrWhiteSpace(v))
+                    ?? day.Location;
+
+                day.ImageLink = await _unsplashImageService.GetImageUrlAsync(imageTarget, cancellationToken);
             }
 
             return plan;
