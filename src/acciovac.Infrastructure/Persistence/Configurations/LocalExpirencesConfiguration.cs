@@ -10,7 +10,7 @@ namespace acciovac.Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.LocationName)
+            builder.Property(x => x.expireancename)
                 .HasMaxLength(200)
                 .IsRequired();
 

@@ -23,7 +23,7 @@ namespace acciovac.Infrastructure.Repositories
         public async Task<IEnumerable<LocalExpirences>> GetAllAsync()
         {
             return await _context.LocalExpirences
-                .OrderBy(x => x.LocationName)
+                .OrderBy(x => x.expireancename)
                 .ToListAsync();
         }
 

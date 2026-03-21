@@ -132,3 +132,4 @@ PUT {{acciovac.API_HostAddress}}/api/messages/{message-id}/resolve
 # Delete Message
 # Replace {message-id} with the actual GUID from the GET response
 DELETE {{acciovac.API_HostAddress}}/api/messages/{message-id}
+

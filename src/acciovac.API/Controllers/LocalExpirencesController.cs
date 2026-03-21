@@ -29,7 +29,7 @@ namespace acciovac.API.Controllers
             var experiences = result.Value?.Select(x => new
             {
                 id = x.Id,
-                locationName = x.LocationName,
+                locationName = x.expireancename,
                 description = x.Description,
                 createdAt = x.CreatedAt
             }) ?? Enumerable.Empty<object>();

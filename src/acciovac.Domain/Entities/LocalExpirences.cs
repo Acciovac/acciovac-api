@@ -5,7 +5,7 @@ namespace acciovac.Domain.Entities;
 
 public class LocalExpirences : AuditableEntity<Guid>
     {
-        public string LocationName { get; private set; } = null!;
+        public string expireancename { get; private set; } = null!;
         public string Description { get; private set; } = null!;
 
         private LocalExpirences() { }
@@ -16,7 +16,7 @@ public class LocalExpirences : AuditableEntity<Guid>
             string createdBy = "system")
         {
             Id = Guid.NewGuid();
-            LocationName = locationName;
+            expireancename = locationName;
             Description = description;
             SetCreated(createdBy);
         }
@@ -26,7 +26,7 @@ public class LocalExpirences : AuditableEntity<Guid>
             string description,
             string modifiedBy = "system")
         {
-            LocationName = locationName;
+            expireancename = locationName;
             Description = description;
             SetModified(modifiedBy);
         }
