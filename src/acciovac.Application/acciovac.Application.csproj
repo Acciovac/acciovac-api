@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\AiRules\Queries\GetAllAiRules\" />
-    <Folder Include="Behaviors\Users\Queries\GetUserById\" />
+    <Folder Include="Behaviors\Users\Queries\GetAllUsers\" />
     <Folder Include="Features\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
