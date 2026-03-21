@@ -22,6 +22,16 @@ namespace acciovac.Application.Behaviors.LocalExpirences.Commands.AddLocalExpire
                 "system"
             );
 
+            // Add photos if provided
+            if (request.PhotoUrls != null && request.PhotoUrls.Any())
+            {
+                int displayOrder = 0;
+                foreach (var photoUrl in request.PhotoUrls.Take(5)) // Limit to 5 photos
+                {
+                    localExperience.AddPhoto(photoUrl, displayOrder++);
+                }
+            }
+
             await _repository.AddAsync(localExperience);
 
             return Result<Guid>.Success(localExperience.Id);

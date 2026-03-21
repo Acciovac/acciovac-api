@@ -4,6 +4,7 @@ using acciovac.Application.Behaviors.LocalExpirences.Commands.AddLocalExpirences
 using acciovac.Application.Behaviors.LocalExpirences.Commands.DeleteLocalExpirences;
 using acciovac.Application.Behaviors.LocalExpirences.Commands.UpdateLocalExpirences;
 using acciovac.Application.Behaviors.LocalExpirences.Queries.GetAllLocalExpirences;
+using acciovac.Domain.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,14 @@ namespace acciovac.API.Controllers
     public class LocalExpirencesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IAzureBlobStorageService _blobStorageService;
+        private const string PhotoContainerName = "local-experiences-photos";
+        private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
 
-        public LocalExpirencesController(IMediator mediator)
+        public LocalExpirencesController(IMediator mediator, IAzureBlobStorageService blobStorageService)
         {
             _mediator = mediator;
+            _blobStorageService = blobStorageService;
         }
 
         [HttpGet]
@@ -29,8 +34,9 @@ namespace acciovac.API.Controllers
             var experiences = result.Value?.Select(x => new
             {
                 id = x.Id,
-                locationName = x.expireancename,
+                expireancename = x.expireancename,
                 description = x.Description,
+                photos = x.Photos.Select(p => new { id = p.Id, photoUrl = p.PhotoUrl, displayOrder = p.DisplayOrder }),
                 createdAt = x.CreatedAt
             }) ?? Enumerable.Empty<object>();
 
@@ -40,9 +46,13 @@ namespace acciovac.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Add([FromBody] AddLocalExpirencesRequest request)
+        public async Task<IActionResult> Add([FromBody] CreateLocalExpirenceDto request)
         {
-            var command = new AddLocalExpirencesCommand(request.LocationName, request.Description);
+            var command = new AddLocalExpirencesCommand(
+                request.LocationName,
+                request.Description,
+                request.PhotoUrls ?? new List<string>()
+            );
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
@@ -50,16 +60,63 @@ namespace acciovac.API.Controllers
                 return BadRequest(ApiResponse.Failure(result.Error));
             }
 
-            return CreatedAtAction(nameof(GetAll), new { id = result.Value }, ApiResponse.Success(new { id = result.Value, message = "Local experience added successfully" }));
+            return CreatedAtAction(nameof(GetAll), new { id = result.Value }, 
+                ApiResponse.Success(new { id = result.Value, message = "Local experience added successfully" }));
+        }
+
+        [HttpPost("{id:guid}/photos")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UploadPhoto(Guid id, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(ApiResponse.Failure("No file provided"));
+            }
+
+            if (file.Length > MaxFileSizeBytes)
+            {
+                return BadRequest(ApiResponse.Failure($"File size exceeds maximum limit of 5 MB"));
+            }
+
+            try
+            {
+                // Generate unique file name
+                var fileExtension = Path.GetExtension(file.FileName);
+                var fileName = $"{id}-{Guid.NewGuid()}{fileExtension}";
+
+                // Upload to Azure Blob Storage
+                using (var stream = file.OpenReadStream())
+                {
+                    var photoUrl = await _blobStorageService.UploadFileAsync(
+                        PhotoContainerName,
+                        fileName,
+                        stream
+                    );
+
+                    return CreatedAtAction(nameof(GetAll), 
+                        ApiResponse.Success(new { photoUrl, message = "Photo uploaded successfully" }));
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse.Failure($"Failed to upload photo: {ex.Message}"));
+            }
         }
 
         [HttpPut("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLocalExpirencesRequest request)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLocalExpirenceDto request)
         {
-            var command = new UpdateLocalExpirencesCommand(id, request.LocationName, request.Description);
+            var command = new UpdateLocalExpirencesCommand(
+                id,
+                request.LocationName,
+                request.Description,
+                request.PhotoUrls ?? new List<string>()
+            );
             var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
