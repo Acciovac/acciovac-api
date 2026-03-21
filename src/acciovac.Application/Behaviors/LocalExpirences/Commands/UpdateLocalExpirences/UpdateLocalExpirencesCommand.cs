@@ -6,6 +6,13 @@ namespace acciovac.Application.Behaviors.LocalExpirences.Commands.UpdateLocalExp
     public sealed record UpdateLocalExpirencesCommand(
         Guid Id,
         string LocationName,
-        string Description
-    ) : IRequest<Result<Guid>>;
+        string Description,
+        List<string> PhotoUrls = null
+    ) : IRequest<Result<Guid>>
+    {
+        public UpdateLocalExpirencesCommand(Guid id, string locationName, string description)
+            : this(id, locationName, description, new List<string>())
+        {
+        }
+    }
 }

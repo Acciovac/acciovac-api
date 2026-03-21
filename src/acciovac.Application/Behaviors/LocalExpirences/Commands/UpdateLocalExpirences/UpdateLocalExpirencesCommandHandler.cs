@@ -28,6 +28,17 @@ namespace acciovac.Application.Behaviors.LocalExpirences.Commands.UpdateLocalExp
                 "system"
             );
 
+            // Update photos if provided
+            if (request.PhotoUrls != null && request.PhotoUrls.Any())
+            {
+                localExperience.ClearPhotos();
+                int displayOrder = 0;
+                foreach (var photoUrl in request.PhotoUrls.Take(5)) // Limit to 5 photos
+                {
+                    localExperience.AddPhoto(photoUrl, displayOrder++);
+                }
+            }
+
             await _repository.UpdateAsync(localExperience);
 
             return Result<Guid>.Success(localExperience.Id);

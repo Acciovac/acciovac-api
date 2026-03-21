@@ -18,6 +18,7 @@ namespace acciovac.Infrastructure.Persistence
         public DbSet<Rate> Rates => Set<Rate>();
         public DbSet<LocalExpirences> LocalExpirences => Set<LocalExpirences>();
         public DbSet<Message> Messages => Set<Message>();
+        public DbSet<Photo> Photos => Set<Photo>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

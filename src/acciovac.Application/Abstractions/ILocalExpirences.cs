@@ -10,4 +10,5 @@ public interface ILocalExpirences
     Task AddAsync(LocalExpirences localExpirences);
     Task UpdateAsync(LocalExpirences localExpirences);
     Task DeleteAsync(LocalExpirences localExpirences);
+    Task AddPhotoAsync(Guid localExpirencesId, string photoUrl, int displayOrder);
 }

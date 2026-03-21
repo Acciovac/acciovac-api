@@ -5,6 +5,13 @@ namespace acciovac.Application.Behaviors.LocalExpirences.Commands.AddLocalExpire
 {
     public sealed record AddLocalExpirencesCommand(
         string LocationName,
-        string Description
-    ) : IRequest<Result<Guid>>;
+        string Description,
+        List<string> PhotoUrls = null
+    ) : IRequest<Result<Guid>>
+    {
+        public AddLocalExpirencesCommand(string locationName, string description)
+            : this(locationName, description, new List<string>())
+        {
+        }
+    }
 }

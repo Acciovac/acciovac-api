@@ -71,6 +71,20 @@ Content-Type: application/json
 
 ###
 
+# Upload Local Experience Photo
+# Replace {id} with the local experience GUID from the GET response
+POST {{acciovac.API_HostAddress}}/api/localexpirences/06d16819-8912-485b-a395-1a97a2deae33/photos
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="photo.jpg"
+Content-Type: image/jpeg
+
+< ./photo.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
 # Update Local Experience
 # Replace {id} with the actual GUID from the GET response
 PUT {{acciovac.API_HostAddress}}/api/localexpirences/{id}
@@ -132,3 +146,4 @@ PUT {{acciovac.API_HostAddress}}/api/messages/{message-id}/resolve
 # Delete Message
 # Replace {message-id} with the actual GUID from the GET response
 DELETE {{acciovac.API_HostAddress}}/api/messages/{message-id}
+
