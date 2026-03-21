@@ -7,7 +7,7 @@ namespace acciovac.Infrastructure.Configuration
     public class AiOptions
     {
         public const string SectionName = "Gemini";
-        public string ApiKey { get; set; } = "AIzaSyC_VEdddcceQTp26dGPy5AlA_pn7jPKcZE";
-        public string ModelId { get; set; } = "gemini-2.5-flash";
+        public string ApiKey { get; set; } = string.Empty;
+        public string ModelId { get; set; } = string.Empty;
     }
 }
