@@ -16,13 +16,18 @@ namespace acciovac.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IAzureBlobStorageService _blobStorageService;
+        private readonly ILocalExpirences _localExpirences;
         private const string PhotoContainerName = "local-experiences-photos";
         private const long MaxFileSizeBytes = 5 * 1024 * 1024; // 5 MB
 
-        public LocalExpirencesController(IMediator mediator, IAzureBlobStorageService blobStorageService)
+        public LocalExpirencesController(
+            IMediator mediator,
+            IAzureBlobStorageService blobStorageService,
+            ILocalExpirences localExpirences)
         {
             _mediator = mediator;
             _blobStorageService = blobStorageService;
+            _localExpirences = localExpirences;
         }
 
         [HttpGet]
@@ -70,6 +75,12 @@ namespace acciovac.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UploadPhoto(Guid id, IFormFile file)
         {
+            var localExperience = await _localExpirences.GetByIdAsync(id);
+            if (localExperience == null)
+            {
+                return NotFound(ApiResponse.Failure("Local experience not found"));
+            }
+
             if (file == null || file.Length == 0)
             {
                 return BadRequest(ApiResponse.Failure("No file provided"));
@@ -94,6 +105,9 @@ namespace acciovac.API.Controllers
                         fileName,
                         stream
                     );
+
+                    var displayOrder = localExperience.Photos.Count;
+                    await _localExpirences.AddPhotoAsync(id, photoUrl, displayOrder);
 
                     return CreatedAtAction(nameof(GetAll), 
                         ApiResponse.Success(new { photoUrl, message = "Photo uploaded successfully" }));
