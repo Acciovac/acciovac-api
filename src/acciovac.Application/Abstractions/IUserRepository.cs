@@ -9,6 +9,7 @@ namespace acciovac.Application.Abstractions
     {
         Task<User?> GetByIdAsync(Guid id);
         Task<User?> GetByFirebaseUidAsync(string firebaseUid);
+        Task<IEnumerable<User>> GetAllAsync();
         Task AddAsync(User user);
     }
 }
