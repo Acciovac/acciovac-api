@@ -25,6 +25,13 @@ namespace acciovac.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.FirebaseUid == firebaseUid);
         }
 
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _context.Users
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync();
+        }
+
         public async Task AddAsync(User user)
         {
             await _context.Users.AddAsync(user);
