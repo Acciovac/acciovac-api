@@ -1,4 +1,5 @@
 using acciovac.API.Common;
+using acciovac.Application.Abstractions;
 using acciovac.Application.Behaviors.Tours.GenerateItinerary;
 using acciovac.Domain.DTOs;
 using MediatR;
@@ -11,18 +12,44 @@ namespace acciovac.API.Controllers
     public class ItinerariesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IFirebaseAuthService _firebaseAuthService;
 
-        public ItinerariesController(IMediator mediator)
+        public ItinerariesController(IMediator mediator, IFirebaseAuthService firebaseAuthService)
         {
             _mediator = mediator;
+            _firebaseAuthService = firebaseAuthService;
         }
 
         [HttpPost]
         [Route("generate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Generate([FromBody] GenerateItineraryRequest request, CancellationToken cancellationToken)
         {
+            var authHeader = Request.Headers.Authorization.FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                return Unauthorized(ApiResponse.Failure("Missing or invalid Authorization header"));
+            }
+
+            var token = authHeader["Bearer ".Length..].Trim();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return Unauthorized(ApiResponse.Failure("Firebase token is required"));
+            }
+
+            try
+            {
+                await _firebaseAuthService.VerifyTokenAsync(token);
+            }
+            catch
+            {
+                return Unauthorized(ApiResponse.Failure("Invalid Firebase token"));
+            }
+
             if (request is null)
             {
                 return BadRequest(ApiResponse.Failure("Request is required"));
@@ -53,6 +80,4 @@ namespace acciovac.API.Controllers
             return Ok(ApiResponse.Success(result));
         }
     }
-
-    
 }
