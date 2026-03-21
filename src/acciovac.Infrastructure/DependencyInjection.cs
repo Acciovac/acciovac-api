@@ -34,6 +34,8 @@ namespace acciovac.Infrastructure
             services.AddHttpClient<IWeatherService, WeatherService>();
             services.AddHttpClient<IUnsplashImageService, UnsplashImageService>();
 
+            services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+
             var firebaseApp = FirebaseApp.DefaultInstance;
 
             if (firebaseApp is null)
