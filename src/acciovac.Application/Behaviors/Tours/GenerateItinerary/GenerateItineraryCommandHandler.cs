@@ -65,7 +65,19 @@ Additional constraints:
                     .FirstOrDefault(v => !string.IsNullOrWhiteSpace(v))
                     ?? day.Location;
 
-                day.ImageLink = await _unsplashImageService.GetImageUrlAsync(imageTarget, cancellationToken);
+                var photoUrl = await _googleMaps.GetPhotoUrlAsync(imageTarget, cancellationToken);
+                
+                if (string.IsNullOrWhiteSpace(photoUrl))
+                {
+                    photoUrl = await _unsplashImageService.GetImageUrlAsync(imageTarget, cancellationToken);
+                }
+
+                if (string.IsNullOrWhiteSpace(photoUrl))
+                {
+                    photoUrl = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=800&auto=format&fit=crop";
+                }
+
+                day.ImageLink = photoUrl;
             }
 
             return plan;

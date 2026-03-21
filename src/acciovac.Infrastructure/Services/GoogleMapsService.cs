@@ -68,6 +68,32 @@ namespace acciovac.Infrastructure.Services
             return result;
         }
 
+        public async Task<string?> GetPhotoUrlAsync(string placeName, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(placeName))
+            {
+                return null;
+            }
+
+            var cleanPlace = placeName.Split('/').Last().Trim();
+
+            var url = $"https://maps.googleapis.com/maps/api/place/findplacefromtext/json" +
+                      $"?input={Uri.EscapeDataString(cleanPlace)}" +
+                      $"&inputtype=textquery" +
+                      $"&fields=photos" +
+                      $"&key={_apiKey}";
+
+            var res = await _http.GetFromJsonAsync<FindPlaceResponse>(url, cancellationToken);
+            var photoRef = res?.Candidates?.FirstOrDefault()?.Photos?.FirstOrDefault()?.PhotoReference;
+
+            if (string.IsNullOrWhiteSpace(photoRef))
+            {
+                return null;
+            }
+
+            return $"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photoRef}&key={_apiKey}";
+        }
+
         private sealed class DistanceMatrixResponse
         {
             public List<Row> Rows { get; set; } = new();
@@ -107,6 +133,22 @@ namespace acciovac.Infrastructure.Services
         {
             public double Lat { get; set; }
             public double Lng { get; set; }
+        }
+
+        private sealed class FindPlaceResponse
+        {
+            public List<PlaceCandidate>? Candidates { get; set; }
+        }
+
+        private sealed class PlaceCandidate
+        {
+            public List<PlacePhoto>? Photos { get; set; }
+        }
+
+        private sealed class PlacePhoto
+        {
+            [System.Text.Json.Serialization.JsonPropertyName("photo_reference")]
+            public string? PhotoReference { get; set; }
         }
     }
 }
