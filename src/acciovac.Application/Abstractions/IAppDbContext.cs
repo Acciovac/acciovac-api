@@ -11,6 +11,7 @@ namespace acciovac.Application.Abstractions
         DbSet<User> Users { get; }
         DbSet<AiRule> AiRules { get; }
         DbSet<Rate> Rates { get; }
+        DbSet<BudgetRange> BudgetRanges { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

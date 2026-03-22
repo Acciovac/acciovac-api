@@ -19,7 +19,7 @@ namespace acciovac.Infrastructure.Persistence
         public DbSet<LocalExpirences> LocalExpirences => Set<LocalExpirences>();
         public DbSet<Message> Messages => Set<Message>();
         public DbSet<Photo> Photos => Set<Photo>();
-
+        public DbSet<BudgetRange> BudgetRanges => Set<BudgetRange>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
