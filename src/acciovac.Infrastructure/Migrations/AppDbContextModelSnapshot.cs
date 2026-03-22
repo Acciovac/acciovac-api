@@ -63,6 +63,44 @@ namespace acciovac.Infrastructure.Migrations
                     b.ToTable("AiRules");
                 });
 
+            modelBuilder.Entity("acciovac.Domain.Entities.BudgetRange", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("FromBudget")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("ToBudget")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BudgetRanges");
+                });
+
             modelBuilder.Entity("acciovac.Domain.Entities.LocalExpirences", b =>
                 {
                     b.Property<Guid>("Id")
