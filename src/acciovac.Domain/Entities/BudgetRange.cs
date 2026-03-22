@@ -9,9 +9,29 @@ namespace acciovac.Domain.Entities
     public class BudgetRange : AuditableEntity<int>
     {
         public int Id { get; set; }
-        public byte Type { get; set; }
-        public decimal FromBudget { get; set; }
-        public decimal ToBudget { get; set; }
-        public bool IsActive { get; set; } = true;
+        public byte Type { get; private set; }
+        public decimal FromBudget { get; private set; }
+        public decimal ToBudget { get; private set; }
+        public bool IsActive { get; private set; } = true;
+
+        private BudgetRange() { }
+
+        public BudgetRange(byte type, decimal fromBudget, decimal toBudget, bool isActive, string createdBy = "system")
+        {
+            Type = type;
+            FromBudget = fromBudget;
+            ToBudget = toBudget;
+            IsActive = isActive;
+            SetCreated(createdBy);
+        }
+
+        public void Update(byte type, decimal fromBudget, decimal toBudget, bool isActive, string modifiedBy = "system")
+        {
+            Type = type;
+            FromBudget = fromBudget;
+            ToBudget = toBudget;
+            IsActive = isActive;
+            SetModified(modifiedBy);
+        }
     }
 }
